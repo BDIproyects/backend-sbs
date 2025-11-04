@@ -3,30 +3,34 @@ import cors from 'cors';
 import sbsRoutes from './routes/sbs.routes.js'; 
 
 // --- Configuración de CORS ---
-// Esta es la URL de tu front-end en Vercel
 const VERCEL_FRONTEND_URL = "https://sbs-dashboard-frontend.vercel.app";
 
 const whitelist = [
-  'http://localhost:5173',
-  'http://localhost:3000', 
-  VERCEL_FRONTEND_URL  
+  VERCEL_FRONTEND_URL,
+  'http://localhost:5173', // Tu localhost de Vite
+  'http://localhost:3000'  // Localhost de React
 ];
 
 const corsOptions = {
   origin: function (origin, callback) {
-    // Permite apps de la whitelist O si el origen es 'undefined' (ej. Postman)
+    // Si el 'origin' está en nuestra lista blanca, o si no hay 'origin' (como Postman),
+    // lo permitimos.
     if (whitelist.indexOf(origin) !== -1 || !origin) {
       callback(null, true);
     } else {
-      callback(new Error('No permitido por CORS'));
+      // Si el 'origin' es un subdominio de Vercel (ej. un 'preview deploy')
+      if (origin.endsWith('.vercel.app')) {
+        callback(null, true);
+      } else {
+        // Bloquear todos los demás
+        callback(new Error('No permitido por CORS'));
+      }
     }
   }
 };
 // --- Fin de la Configuración ---
 
 const app = express();
-
-// Railway te dará un puerto en 'process.env.PORT'
 const PORT = process.env.PORT || 4000;
 
 // Middlewares
@@ -38,11 +42,9 @@ app.get('/', (req, res) => {
   res.send('API del Scraper SBS está funcionando!');
 });
 
-// Usamos las rutas que definimos
 app.use('/api/v1/sbs', sbsRoutes); 
 
 // Arrancar el servidor
 app.listen(PORT, () => {
-  // Escucha en el puerto asignado por Railway (o 4000 en local)
   console.log(`🚀 Servidor corriendo en el puerto ${PORT}`);
 });
