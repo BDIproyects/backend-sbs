@@ -25,10 +25,12 @@ export const getSbsRates = async (moneda = 'nacional') => {
   let finalJson = [];
 
   try {
-    // NOTA: Para Railway, necesitarás argumentos de 'no-sandbox'
     browser = await chromium.launch({
       headless: true,
-      args: ['--no-sandbox', '--disable-setuid-sandbox'] // Importante para despliegue
+      // Le decimos a Playwright que use el binario de Chromium
+      // que ya instalamos en el Dockerfile
+      executablePath: '/usr/bin/chromium-browser', 
+      args: ['--no-sandbox', '--disable-setuid-sandbox']
     });
     
     const context = await browser.newContext({
