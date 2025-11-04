@@ -48,7 +48,7 @@ export const getSbsRates = async (moneda = 'nacional') => {
     }
 
     console.log(`2b. Esperando selector: ${MAIN_TABLE_SELECTOR}`);
-    await page.waitForSelector(MAIN_TABLE_SELECTOR, { timeout: 15000 });
+    await page.waitForSelector(MAIN_TABLE_SELECTOR, { timeout: 45000 });
     console.log("   ...¡Selector de tabla encontrado!");
 
     console.log("3. Extrayendo datos...");
