@@ -27,9 +27,6 @@ export const getSbsRates = async (moneda = 'nacional') => {
   try {
     browser = await chromium.launch({
       headless: true,
-      // Le decimos a Playwright que use el binario de Chromium
-      // que ya instalamos en el Dockerfile
-      executablePath: '/usr/bin/chromium-browser', 
       args: ['--no-sandbox', '--disable-setuid-sandbox']
     });
     
